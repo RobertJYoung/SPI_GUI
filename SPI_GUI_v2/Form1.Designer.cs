@@ -45,6 +45,9 @@
             this.devInfo = new System.Windows.Forms.TextBox();
             this.device_label = new System.Windows.Forms.Label();
             this.devInfo_label = new System.Windows.Forms.Label();
+            this.freq_label = new System.Windows.Forms.Label();
+            this.freqbox = new System.Windows.Forms.TextBox();
+            this.setFreq_button = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,7 +59,6 @@
             this.itextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.itextBox.Size = new System.Drawing.Size(320, 103);
             this.itextBox.TabIndex = 0;
-            this.itextBox.Text = "Enter ASCII text to transmit here";
             this.itextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // transButton
@@ -144,13 +146,13 @@
             // 
             // ASCII
             // 
-            this.ASCII.HeaderText = "ASCII";
+            this.ASCII.HeaderText = "Hex";
             this.ASCII.Name = "ASCII";
             this.ASCII.ReadOnly = true;
             // 
             // Hex
             // 
-            this.Hex.HeaderText = "Hex";
+            this.Hex.HeaderText = "Byte";
             this.Hex.Name = "Hex";
             this.Hex.ReadOnly = true;
             // 
@@ -173,27 +175,27 @@
             // devices
             // 
             this.devices.FormattingEnabled = true;
-            this.devices.Location = new System.Drawing.Point(18, 127);
+            this.devices.Location = new System.Drawing.Point(18, 166);
             this.devices.Name = "devices";
-            this.devices.Size = new System.Drawing.Size(120, 108);
+            this.devices.Size = new System.Drawing.Size(120, 69);
             this.devices.TabIndex = 11;
             this.devices.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // devInfo
             // 
-            this.devInfo.Location = new System.Drawing.Point(158, 127);
+            this.devInfo.Location = new System.Drawing.Point(158, 166);
             this.devInfo.Multiline = true;
             this.devInfo.Name = "devInfo";
             this.devInfo.ReadOnly = true;
             this.devInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.devInfo.Size = new System.Drawing.Size(180, 108);
+            this.devInfo.Size = new System.Drawing.Size(180, 69);
             this.devInfo.TabIndex = 12;
             this.devInfo.TextChanged += new System.EventHandler(this.textBox1_TextChanged_1);
             // 
             // device_label
             // 
             this.device_label.AutoSize = true;
-            this.device_label.Location = new System.Drawing.Point(15, 111);
+            this.device_label.Location = new System.Drawing.Point(15, 150);
             this.device_label.Name = "device_label";
             this.device_label.Size = new System.Drawing.Size(49, 13);
             this.device_label.TabIndex = 13;
@@ -202,17 +204,48 @@
             // devInfo_label
             // 
             this.devInfo_label.AutoSize = true;
-            this.devInfo_label.Location = new System.Drawing.Point(155, 111);
+            this.devInfo_label.Location = new System.Drawing.Point(155, 150);
             this.devInfo_label.Name = "devInfo_label";
             this.devInfo_label.Size = new System.Drawing.Size(65, 13);
             this.devInfo_label.TabIndex = 14;
             this.devInfo_label.Text = "Device Info:";
+            // 
+            // freq_label
+            // 
+            this.freq_label.AutoSize = true;
+            this.freq_label.Location = new System.Drawing.Point(12, 111);
+            this.freq_label.Name = "freq_label";
+            this.freq_label.Size = new System.Drawing.Size(31, 13);
+            this.freq_label.TabIndex = 15;
+            this.freq_label.Text = "Freq:";
+            this.freq_label.Click += new System.EventHandler(this.label1_Click_4);
+            // 
+            // freqbox
+            // 
+            this.freqbox.Location = new System.Drawing.Point(18, 127);
+            this.freqbox.Name = "freqbox";
+            this.freqbox.Size = new System.Drawing.Size(120, 20);
+            this.freqbox.TabIndex = 16;
+            this.freqbox.TextChanged += new System.EventHandler(this.freqbox_TextChanged);
+            // 
+            // setFreq_button
+            // 
+            this.setFreq_button.Location = new System.Drawing.Point(158, 124);
+            this.setFreq_button.Name = "setFreq_button";
+            this.setFreq_button.Size = new System.Drawing.Size(180, 23);
+            this.setFreq_button.TabIndex = 17;
+            this.setFreq_button.Text = "Set Frequency";
+            this.setFreq_button.UseVisualStyleBackColor = true;
+            this.setFreq_button.Click += new System.EventHandler(this.setFreq_button_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 513);
+            this.Controls.Add(this.setFreq_button);
+            this.Controls.Add(this.freqbox);
+            this.Controls.Add(this.freq_label);
             this.Controls.Add(this.devInfo_label);
             this.Controls.Add(this.device_label);
             this.Controls.Add(this.devInfo);
@@ -246,14 +279,17 @@
         private System.Windows.Forms.Label status_label;
         private System.Windows.Forms.DataGridView table;
         private System.Windows.Forms.Label table_label;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ASCII;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Hex;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Voltage;
         private System.Windows.Forms.ListBox devices;
         private System.Windows.Forms.TextBox devInfo;
         private System.Windows.Forms.Label device_label;
         private System.Windows.Forms.Label devInfo_label;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ASCII;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Hex;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Voltage;
+        private System.Windows.Forms.Label freq_label;
+        private System.Windows.Forms.TextBox freqbox;
+        private System.Windows.Forms.Button setFreq_button;
     }
 }
 

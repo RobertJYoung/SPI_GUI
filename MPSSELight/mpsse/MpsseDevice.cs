@@ -51,7 +51,7 @@ namespace MPSSELight
             public uint ReadTimeout = 3000;
             public uint WriteTimeout = 3000;
             public byte Latency = 1;
-            public UInt16 clockDevisor = 0x0000;
+            public UInt16 clockDevisor = 0x12B;
             public DataTransferEvent DataReadEvent = null;
             public DataTransferEvent DataWriteEvent = null;
         }
