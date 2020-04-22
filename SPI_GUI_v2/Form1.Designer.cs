@@ -48,16 +48,22 @@
             this.freq_label = new System.Windows.Forms.Label();
             this.freqbox = new System.Windows.Forms.TextBox();
             this.setFreq_button = new System.Windows.Forms.Button();
+            this.delay_label = new System.Windows.Forms.Label();
+            this.delayBox = new System.Windows.Forms.TextBox();
+            this.delayButton = new System.Windows.Forms.Button();
+            this.loopBackCheckBox = new System.Windows.Forms.CheckBox();
+            this.csvCheckBox = new System.Windows.Forms.CheckBox();
+            this.repeatCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.table)).BeginInit();
             this.SuspendLayout();
             // 
             // itextBox
             // 
-            this.itextBox.Location = new System.Drawing.Point(18, 254);
+            this.itextBox.Location = new System.Drawing.Point(18, 322);
             this.itextBox.Multiline = true;
             this.itextBox.Name = "itextBox";
             this.itextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.itextBox.Size = new System.Drawing.Size(320, 103);
+            this.itextBox.Size = new System.Drawing.Size(320, 73);
             this.itextBox.TabIndex = 0;
             this.itextBox.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
@@ -65,7 +71,7 @@
             // 
             this.transButton.Location = new System.Drawing.Point(158, 26);
             this.transButton.Name = "transButton";
-            this.transButton.Size = new System.Drawing.Size(180, 80);
+            this.transButton.Size = new System.Drawing.Size(180, 82);
             this.transButton.TabIndex = 2;
             this.transButton.Text = "Transmit";
             this.transButton.UseVisualStyleBackColor = true;
@@ -74,11 +80,11 @@
             // otextBox
             // 
             this.otextBox.AcceptsReturn = true;
-            this.otextBox.Location = new System.Drawing.Point(18, 376);
+            this.otextBox.Location = new System.Drawing.Point(18, 414);
             this.otextBox.Multiline = true;
             this.otextBox.Name = "otextBox";
             this.otextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.otextBox.Size = new System.Drawing.Size(320, 121);
+            this.otextBox.Size = new System.Drawing.Size(320, 83);
             this.otextBox.TabIndex = 4;
             this.otextBox.Text = "Output of transmission will appear here";
             this.otextBox.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
@@ -86,7 +92,7 @@
             // inLabel
             // 
             this.inLabel.AutoSize = true;
-            this.inLabel.Location = new System.Drawing.Point(15, 238);
+            this.inLabel.Location = new System.Drawing.Point(15, 306);
             this.inLabel.Name = "inLabel";
             this.inLabel.Size = new System.Drawing.Size(37, 13);
             this.inLabel.TabIndex = 5;
@@ -96,7 +102,7 @@
             // outLabel
             // 
             this.outLabel.AutoSize = true;
-            this.outLabel.Location = new System.Drawing.Point(15, 360);
+            this.outLabel.Location = new System.Drawing.Point(19, 398);
             this.outLabel.Name = "outLabel";
             this.outLabel.Size = new System.Drawing.Size(45, 13);
             this.outLabel.TabIndex = 6;
@@ -175,7 +181,7 @@
             // devices
             // 
             this.devices.FormattingEnabled = true;
-            this.devices.Location = new System.Drawing.Point(18, 166);
+            this.devices.Location = new System.Drawing.Point(18, 127);
             this.devices.Name = "devices";
             this.devices.Size = new System.Drawing.Size(120, 69);
             this.devices.TabIndex = 11;
@@ -183,7 +189,7 @@
             // 
             // devInfo
             // 
-            this.devInfo.Location = new System.Drawing.Point(158, 166);
+            this.devInfo.Location = new System.Drawing.Point(158, 127);
             this.devInfo.Multiline = true;
             this.devInfo.Name = "devInfo";
             this.devInfo.ReadOnly = true;
@@ -195,7 +201,7 @@
             // device_label
             // 
             this.device_label.AutoSize = true;
-            this.device_label.Location = new System.Drawing.Point(15, 150);
+            this.device_label.Location = new System.Drawing.Point(15, 111);
             this.device_label.Name = "device_label";
             this.device_label.Size = new System.Drawing.Size(49, 13);
             this.device_label.TabIndex = 13;
@@ -204,25 +210,26 @@
             // devInfo_label
             // 
             this.devInfo_label.AutoSize = true;
-            this.devInfo_label.Location = new System.Drawing.Point(155, 150);
+            this.devInfo_label.Location = new System.Drawing.Point(155, 111);
             this.devInfo_label.Name = "devInfo_label";
             this.devInfo_label.Size = new System.Drawing.Size(65, 13);
             this.devInfo_label.TabIndex = 14;
             this.devInfo_label.Text = "Device Info:";
+            this.devInfo_label.Click += new System.EventHandler(this.devInfo_label_Click);
             // 
             // freq_label
             // 
             this.freq_label.AutoSize = true;
-            this.freq_label.Location = new System.Drawing.Point(12, 111);
+            this.freq_label.Location = new System.Drawing.Point(15, 199);
             this.freq_label.Name = "freq_label";
-            this.freq_label.Size = new System.Drawing.Size(31, 13);
+            this.freq_label.Size = new System.Drawing.Size(50, 13);
             this.freq_label.TabIndex = 15;
-            this.freq_label.Text = "Freq:";
+            this.freq_label.Text = "Freq(Hz):";
             this.freq_label.Click += new System.EventHandler(this.label1_Click_4);
             // 
             // freqbox
             // 
-            this.freqbox.Location = new System.Drawing.Point(18, 127);
+            this.freqbox.Location = new System.Drawing.Point(18, 215);
             this.freqbox.Name = "freqbox";
             this.freqbox.Size = new System.Drawing.Size(120, 20);
             this.freqbox.TabIndex = 16;
@@ -230,19 +237,85 @@
             // 
             // setFreq_button
             // 
-            this.setFreq_button.Location = new System.Drawing.Point(158, 124);
+            this.setFreq_button.Location = new System.Drawing.Point(158, 215);
             this.setFreq_button.Name = "setFreq_button";
-            this.setFreq_button.Size = new System.Drawing.Size(180, 23);
+            this.setFreq_button.Size = new System.Drawing.Size(180, 20);
             this.setFreq_button.TabIndex = 17;
             this.setFreq_button.Text = "Set Frequency";
             this.setFreq_button.UseVisualStyleBackColor = true;
             this.setFreq_button.Click += new System.EventHandler(this.setFreq_button_Click);
+            // 
+            // delay_label
+            // 
+            this.delay_label.AutoSize = true;
+            this.delay_label.Location = new System.Drawing.Point(15, 238);
+            this.delay_label.Name = "delay_label";
+            this.delay_label.Size = new System.Drawing.Size(56, 13);
+            this.delay_label.TabIndex = 18;
+            this.delay_label.Text = "Delay(ms):";
+            // 
+            // delayBox
+            // 
+            this.delayBox.Location = new System.Drawing.Point(18, 254);
+            this.delayBox.Name = "delayBox";
+            this.delayBox.Size = new System.Drawing.Size(120, 20);
+            this.delayBox.TabIndex = 19;
+            this.delayBox.TextChanged += new System.EventHandler(this.delayBox_TextChanged);
+            // 
+            // delayButton
+            // 
+            this.delayButton.Location = new System.Drawing.Point(158, 254);
+            this.delayButton.Name = "delayButton";
+            this.delayButton.Size = new System.Drawing.Size(180, 20);
+            this.delayButton.TabIndex = 20;
+            this.delayButton.Text = "Set Delay";
+            this.delayButton.UseVisualStyleBackColor = true;
+            this.delayButton.Click += new System.EventHandler(this.delayButton_Click);
+            // 
+            // loopBackCheckBox
+            // 
+            this.loopBackCheckBox.AutoSize = true;
+            this.loopBackCheckBox.Location = new System.Drawing.Point(267, 286);
+            this.loopBackCheckBox.Name = "loopBackCheckBox";
+            this.loopBackCheckBox.Size = new System.Drawing.Size(71, 17);
+            this.loopBackCheckBox.TabIndex = 21;
+            this.loopBackCheckBox.Text = "loopBack";
+            this.loopBackCheckBox.UseVisualStyleBackColor = true;
+            this.loopBackCheckBox.CheckedChanged += new System.EventHandler(this.loopBackCheckBox_CheckedChanged);
+            // 
+            // csvCheckBox
+            // 
+            this.csvCheckBox.AutoSize = true;
+            this.csvCheckBox.Location = new System.Drawing.Point(128, 286);
+            this.csvCheckBox.Name = "csvCheckBox";
+            this.csvCheckBox.Size = new System.Drawing.Size(92, 17);
+            this.csvCheckBox.TabIndex = 22;
+            this.csvCheckBox.Text = "generate CSV";
+            this.csvCheckBox.UseVisualStyleBackColor = true;
+            this.csvCheckBox.CheckedChanged += new System.EventHandler(this.csvCheckBox_CheckedChanged);
+            // 
+            // repeatCheckBox
+            // 
+            this.repeatCheckBox.AutoSize = true;
+            this.repeatCheckBox.Location = new System.Drawing.Point(18, 286);
+            this.repeatCheckBox.Name = "repeatCheckBox";
+            this.repeatCheckBox.Size = new System.Drawing.Size(56, 17);
+            this.repeatCheckBox.TabIndex = 23;
+            this.repeatCheckBox.Text = "repeat";
+            this.repeatCheckBox.UseVisualStyleBackColor = true;
+            this.repeatCheckBox.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(821, 513);
+            this.Controls.Add(this.repeatCheckBox);
+            this.Controls.Add(this.csvCheckBox);
+            this.Controls.Add(this.loopBackCheckBox);
+            this.Controls.Add(this.delayButton);
+            this.Controls.Add(this.delayBox);
+            this.Controls.Add(this.delay_label);
             this.Controls.Add(this.setFreq_button);
             this.Controls.Add(this.freqbox);
             this.Controls.Add(this.freq_label);
@@ -290,6 +363,12 @@
         private System.Windows.Forms.Label freq_label;
         private System.Windows.Forms.TextBox freqbox;
         private System.Windows.Forms.Button setFreq_button;
+        private System.Windows.Forms.Label delay_label;
+        private System.Windows.Forms.TextBox delayBox;
+        private System.Windows.Forms.Button delayButton;
+        private System.Windows.Forms.CheckBox loopBackCheckBox;
+        private System.Windows.Forms.CheckBox csvCheckBox;
+        private System.Windows.Forms.CheckBox repeatCheckBox;
     }
 }
 

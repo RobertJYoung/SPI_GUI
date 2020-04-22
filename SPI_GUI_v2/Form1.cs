@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MPSSELight;
 using FTD2XX_NET;
+using System.IO;
 
 namespace SPI_GUI_v2
 {
@@ -30,6 +31,8 @@ namespace SPI_GUI_v2
         public const string DEFAULT_OUTPUT_TEXT = "Output of transmission will appear here";
         public const string CONNECTED = "Status : Connected";
         public const string DISCONNECTED = "Status : Disconnected";
+        public const string Tx_PATH_CSV = "./Tx.csv";
+        public const string Rx_PATH_CSV = "./Rx.csv";
         public const int freqUbound = 30000000; //Hz
         public const int freqLbound = 457; //Hz
 
@@ -42,6 +45,7 @@ namespace SPI_GUI_v2
         public bool outTextClicked = false;
         public bool connected = false;
         public int frequency = 100000; // value in Hz
+        public int timeDelay = 0; // value in ms
 
         private ushort calculateDivisor(int frequency)
         {
@@ -101,55 +105,102 @@ namespace SPI_GUI_v2
         }
 
 
-        private void button1_Click(object sender, EventArgs e)
+        private async void button1_Click(object sender, EventArgs e)
         {
             try
             {
+                byte[] tdata, rdata;
+                List<String> errors;
+                string time;
+
                 if (!connected)
                 {
                     otextBox.Text = ("Cannot transmit data until connected! Connect first before transmitting!");
                 }
                 else
                 {
-                    List<String> errors = new List<string>();
-
-                    // Check to see if valid input length (even)
-                    if(itextBox.Text.Length % 2 != 0)
+                    do
                     {
-                        Console.WriteLine("Input was not a valid hex sequence of even length");
-                        throw new Exception();
-                    }
+                        errors = new List<string>();
 
-                    byte[] tdata = ConvertHexStringToByteArray(itextBox.Text);
-                    //byte[] tdata = Encoding.UTF8.GetBytes(temp);
-
-                    byte[] rdata = spi.readWrite(tdata);
-
-                    string rdataString = BitConverter.ToString(rdata).Replace("-", "");
-                    //string rdataString = Encoding.UTF8.GetString(rdata);
-                    table.Rows.Clear();
-
-                    for (int i = 0; i < rdata.Length; i++)
-                    {
-                        if(tdata[i] != rdata[i])
+                        // Check to see if valid input length (even)
+                        if (itextBox.Text.Length % 2 != 0)
                         {
-                            errors.Add("byte[" + i + "] : " + "sent = " + tdata[i] + ", received = " + rdata[i] + Environment.NewLine);
+                            Console.WriteLine("Input was not a valid hex sequence of even length");
+                            throw new Exception();
                         }
-                        table.Rows.Add(i, rdataString.Substring(i*2, 2), rdata[i], "X");
-                    }
 
-                    otextBox.Text = rdataString;
+                        tdata = ConvertHexStringToByteArray(itextBox.Text);
 
-                    if (errors.Count > 0)
-                    {
-                        otextBox.Text += Environment.NewLine + "Errors: " + Environment.NewLine;
-                        for (int i = 0; i < errors.Count; i++)
-                            otextBox.Text += errors[i];
-                    }
-                    else
-                    {
-                        otextBox.AppendText(Environment.NewLine + Environment.NewLine + "*No errors detected*" + Environment.NewLine);
-                    }
+                        // Delay transmission
+                        await Task.Delay(timeDelay);
+
+                        rdata = spi.readWrite(tdata);
+
+                        // Get time immediately after transmission
+                        time = DateTime.Now.ToString("MM-dd-yyyy HH:mm:ss");
+
+                        // Create csv files if requested
+                        if (csvCheckBox.Checked)
+                        {
+                            var csvTx = new StringBuilder();
+                            var csvRx = new StringBuilder();
+
+                            //Tx 
+                            /*
+                            string lineTx = time + ",";
+                            for (int i = 0; i < itextBox.Text.Length - 2; i +=2)
+                            {
+                                lineTx += itextBox.Text.Substring(i, 2) + ",";
+                            }
+                            csvTx.AppendLine(lineTx);
+                            File.AppendAllText(Tx_PATH_CSV, csvTx.ToString());
+                            */
+
+                            //Rx 
+                            string rdataCSV = BitConverter.ToString(rdata).Replace("-", ",");
+                            string lineRx = time + "," + rdataCSV;
+                            csvRx.AppendLine(lineRx);
+                            File.AppendAllText(Rx_PATH_CSV, csvRx.ToString());
+                        }
+
+                        string rdataString = BitConverter.ToString(rdata).Replace("-", "");
+
+                        table.Rows.Clear();
+
+                        if (loopBackCheckBox.Checked)
+                        {
+                            for (int i = 0; i < rdata.Length; i++)
+                            {
+                                if (tdata[i] != rdata[i])
+                                {
+                                    errors.Add("byte[" + i + "] : " + "sent = " + tdata[i] + ", received = " + rdata[i] + Environment.NewLine);
+                                }
+                                table.Rows.Add(i, rdataString.Substring(i * 2, 2), rdata[i], "X");
+                            }
+
+                            otextBox.Text = rdataString;
+
+                            if (errors.Count > 0)
+                            {
+                                otextBox.Text += Environment.NewLine + "Errors: " + Environment.NewLine;
+                                for (int i = 0; i < errors.Count; i++)
+                                    otextBox.Text += errors[i];
+                            }
+                            else
+                            {
+                                otextBox.AppendText(Environment.NewLine + Environment.NewLine + "*No errors detected*" + Environment.NewLine);
+                            }
+                        }
+                        else // Actual Data is being received
+                        {
+                            for (int i = 0; i < rdata.Length; i++)
+                            {
+                                table.Rows.Add(i, rdataString.Substring(i * 2, 2), rdata[i], "X");
+                            }
+                            otextBox.Text = rdataString;
+                        }
+                    } while (repeatCheckBox.Checked && connected);
                 }
             }
             catch (System.FormatException sfe)
@@ -172,15 +223,14 @@ namespace SPI_GUI_v2
             {
                 mpsse = new FT232H(selectedSerialNumber);
                 spi = new SpiDevice(mpsse);
-                mpsse.Loopback = true;
+                mpsse.Loopback = loopBackCheckBox.Checked;
                 status_label.Text = CONNECTED;
                 connectButton.BackColor = Color.Lime;
-                otextBox.Text = "Succesful connection!" + Environment.NewLine + "Frequency = 100kHz"; 
+                otextBox.Text = "Succesful connection!" + Environment.NewLine + "Frequency = 100kHz";
                 otextBox.Text = "Succesful connection!" + Environment.NewLine + "Frequency = 100kHz"; // Repetition needed to make this appear??
                 connected = true;
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.Write("Exception occured!...Disconnecting");
                 status_label.Text = DISCONNECTED;
@@ -217,7 +267,7 @@ namespace SPI_GUI_v2
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            selectedSerialNumber = (string) devices.SelectedItem;
+            selectedSerialNumber = (string)devices.SelectedItem;
             devInfo.Text = ftdiDeviceList[devices.SelectedIndex].Description + Environment.NewLine;
         }
 
@@ -280,6 +330,7 @@ namespace SPI_GUI_v2
             }
             else
             {
+                frequency = Int32.Parse(freqbox.Text); // NOTE: value is parsed as a signed integer
                 if (frequency > freqUbound || frequency < freqLbound)
                 {
                     Console.WriteLine("Frequency is outside of valid range [457Hz, 60MHz]");
@@ -293,6 +344,53 @@ namespace SPI_GUI_v2
                     otextBox.Text = "Device frequency set to : " + frequency + " Hz";
                 }
             }
+        }
+
+        private void devInfo_label_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void delayBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void delayButton_Click(object sender, EventArgs e)
+        {
+            int textDelay = Int32.Parse(delayBox.Text); // NOTE: value is parsed as a signed integer
+            if (textDelay < 0)
+            {
+                Console.WriteLine("Delay time must be a positive time value...Retry with a valid time");
+                otextBox.Text = "Delay time must be a positive time value...Retry with a valid time";
+            }
+            else
+            {
+                timeDelay = textDelay;
+                Console.WriteLine("Delay set to: " + timeDelay + " (ms)");
+                otextBox.Text = "Delay set to: " + timeDelay + " (ms)";
+            }
+        }
+
+        private void loopBackCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            if (mpsse != null)
+            {
+                mpsse.Loopback = loopBackCheckBox.Checked;
+            }
+            string result = loopBackCheckBox.Checked ? "True" : "False";
+            Console.WriteLine("LoopBack = " + result);
+            otextBox.Text = "LoopBack = " + result;
+        }
+
+        private void csvCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
